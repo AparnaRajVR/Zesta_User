@@ -41,7 +41,7 @@ class AllEventsGridPage extends StatelessWidget {
 
             return GestureDetector(
               onTap: () {
-                Get.to(() => EventDetailsPage(event: event));
+                Get.to(() => EventDetailsPage(event: event, eventId: '',));
               },
               child: EventCard(
                 imageUrl: event.images?.isNotEmpty ?? false

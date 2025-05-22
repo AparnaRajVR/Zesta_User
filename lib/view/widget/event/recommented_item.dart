@@ -65,7 +65,7 @@ return Padding(
   child: InkWell(
       onTap: () {
       
-      Get.to(() => EventDetailsPage(event: event));
+      Get.to(() => EventDetailsPage(event: event, eventId: '',));
     },
     child: EventCard(
       imageUrl: event.images?.isNotEmpty ?? false

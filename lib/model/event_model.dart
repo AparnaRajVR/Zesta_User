@@ -1,6 +1,9 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EventModel {
+  final String id; 
   final String? address;
   final List<String>? ageLimit;
   final String? categoryId;
@@ -18,6 +21,7 @@ class EventModel {
   final String organizerName;
 
   EventModel({
+    required this.id, 
     this.address,
     this.ageLimit,
     this.categoryId,
@@ -37,21 +41,43 @@ class EventModel {
 
   factory EventModel.fromMap(Map<String, dynamic> map) {
     return EventModel(
-      address: map['address'],
+      id: map['id'] ?? '', // Read id from map
+      address: map['address'] as String?,
       ageLimit: List<String>.from(map['ageLimit'] ?? []),
-      categoryId: map['categoryId'],
-      city: map['city'],
+      categoryId: map['categoryId'] as String?,
+      city: map['city'] as String?,
       createdAt: (map['createdAt'] as Timestamp?)?.toDate(),
-      date: map['date'],
-      description: map['description'],
-      duration: map['duration'],
-      endTime: map['endTime'],
+      date: map['date'] as String?,
+      description: map['description'] as String?,
+      duration: map['duration'] as String?,
+      endTime: map['endTime'] as String?,
       images: List<String>.from(map['images'] ?? []),
       languages: List<String>.from(map['languages'] ?? []),
-      name: map['name'],
-      startTime: map['startTime'],
-      ticketPrice: map['ticketPrice'],
-      organizerName: map['organizerName'] ?? '',
+      name: map['name'] as String?,
+      startTime: map['startTime'] as String?,
+      ticketPrice: (map['ticketPrice'] as num?)?.toDouble(),
+      organizerName: map['organizerName'] as String? ?? '',
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'address': address,
+      'ageLimit': ageLimit,
+      'categoryId': categoryId,
+      'city': city,
+      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'date': date,
+      'description': description,
+      'duration': duration,
+      'endTime': endTime,
+      'images': images,
+      'languages': languages,
+      'name': name,
+      'startTime': startTime,
+      'ticketPrice': ticketPrice,
+      'organizerName': organizerName,
+    };
   }
 }

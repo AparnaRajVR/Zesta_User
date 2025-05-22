@@ -32,7 +32,7 @@ class BottomNavWidget extends StatelessWidget {
             tabs: const [
               GButton(icon: Icons.home, text: 'Home'),
               GButton(icon: Icons.event, text: 'Tickets'),
-              GButton(icon: Icons.analytics, text: 'Analytics'),
+              GButton(icon: Icons.favorite, text: 'Favourites'),
               GButton(icon: Icons.person, text: 'Profile'),
             ],
             selectedIndex: selectedIndex.value,

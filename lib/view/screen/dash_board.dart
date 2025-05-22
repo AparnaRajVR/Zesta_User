@@ -5,13 +5,14 @@ import 'package:get/get.dart';
 import 'package:zesta_1/constant/color.dart';
 
 import 'package:zesta_1/services/event_controller.dart';
-import 'package:zesta_1/view/screen/Analytcs_page.dart';
+import 'package:zesta_1/view/screen/favourite_page.dart';
 import 'package:zesta_1/view/screen/profile_screen.dart';
 import 'package:zesta_1/view/screen/ticket_screen.dart';
 import 'package:zesta_1/view/widget/appbar_wdget.dart';
 import 'package:zesta_1/view/widget/bottom_nav.dart';
 
 import 'package:zesta_1/view/widget/event/category_event.dart';
+import 'package:zesta_1/view/widget/event/category_filter.dart';
 import 'package:zesta_1/view/widget/event/event_carousel.dart';
 import 'package:zesta_1/view/widget/event/recommented_item.dart';
 import 'package:zesta_1/view/widget/location_dialogue.dart';
@@ -34,7 +35,7 @@ class Dashboard extends StatelessWidget {
 
   final List<Widget> pages = [
     const TicketScreen(), 
-    const Analytics(), 
+    const FavoritesPage(), 
      ProfileScreen(),
   ];
 
@@ -59,7 +60,10 @@ class Dashboard extends StatelessWidget {
                   children: [
                     
                     const SizedBox(height: 11),
-                    CategoryIconWidget(),
+                    CategoryIconWidget( onCategoryTap: (label) {
+                        // Navigate to the filtered events grid page
+                        Get.to(() => FilteredEventsGridPage(categoryLabel: label));
+                      },),
                     const SizedBox(height: 18),
                     EventCarousel(events: eventController.allEvents),
                     const SizedBox(height: 16),
