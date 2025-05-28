@@ -1,147 +1,89 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:zesta_1/services/filter_service.dart';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:zesta_1/services/event_controller.dart';
 
-class EventFilterDialog extends StatelessWidget {
-  final List<String> locations;
-  final EventFilterController controller = Get.find();
+// class FilteredEventsGridPage extends StatelessWidget {
+//   final String categoryLabel;
+//   final EventController eventController = Get.find();
 
-  EventFilterDialog({Key? key, required this.locations}) : super(key: key);
+//   FilteredEventsGridPage({super.key, required this.categoryLabel});
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Filter Events', style: Theme.of(context).textTheme.titleLarge),
-
-              SizedBox(height: 20),
-
-              // Location Dropdown
-              Obx(() => DropdownButtonFormField<String>(
-                    decoration: InputDecoration(labelText: 'Location'),
-                    value: controller.selectedLocation.value.isEmpty
-                        ? null
-                        : controller.selectedLocation.value,
-                    items: locations
-                        .map((loc) => DropdownMenuItem(
-                              value: loc,
-                              child: Text(loc),
-                            ))
-                        .toList(),
-                    onChanged: (val) => controller.selectedLocation.value = val ?? '',
-                  )),
-              SizedBox(height: 16),
-
-              // Price Filter
-              Obx(() => Row(
-                    children: [
-                      Text('Price:'),
-                      SizedBox(width: 16),
-                      ChoiceChip(
-                        label: Text('All'),
-                        selected: controller.isFree.value == null,
-                        onSelected: (_) => controller.isFree.value = null,
-                      ),
-                      SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('Free'),
-                        selected: controller.isFree.value == true,
-                        onSelected: (_) => controller.isFree.value = true,
-                      ),
-                      SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('Paid'),
-                        selected: controller.isFree.value == false,
-                        onSelected: (_) => controller.isFree.value = false,
-                      ),
-                    ],
-                  )),
-              SizedBox(height: 16),
-
-              // Distance Sort
-              Obx(() => Row(
-                    children: [
-                      Text('Sort by Distance:'),
-                      SizedBox(width: 16),
-                      ChoiceChip(
-                        label: Text('Nearest'),
-                        selected: controller.distanceSort.value == 'nearest',
-                        onSelected: (_) => controller.distanceSort.value = 'nearest',
-                      ),
-                      SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('Farthest'),
-                        selected: controller.distanceSort.value == 'farthest',
-                        onSelected: (_) => controller.distanceSort.value = 'farthest',
-                      ),
-                    ],
-                  )),
-              SizedBox(height: 16),
-
-              // Date Filter
-              Obx(() => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text('Date:'),
-                    subtitle: Text(
-                      controller.selectedDate.value == null
-                          ? 'Any'
-                          : DateFormat('yyyy-MM-dd').format(controller.selectedDate.value!),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.calendar_today),
-                      onPressed: () async {
-                        DateTime now = DateTime.now();
-                        DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: controller.selectedDate.value ?? now,
-                          firstDate: now.subtract(Duration(days: 365)),
-                          lastDate: now.add(Duration(days: 365)),
-                        );
-                        if (picked != null) {
-                          controller.selectedDate.value = picked;
-                        }
-                      },
-                    ),
-                  )),
-
-              SizedBox(height: 24),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      // Optionally clear filters here
-                      controller.selectedLocation.value = '';
-                      controller.isFree.value = null;
-                      controller.distanceSort.value = '';
-                      controller.selectedDate.value = null;
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Clear'),
-                  ),
-                  SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // You can trigger your filtering logic here or after dialog closes
-                    },
-                    child: Text('Apply'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     // Print when the page is built
+//     print('🏗️ FilteredEventsGridPage BUILD - Category: $categoryLabel');
+//     print('📊 Total events available: ${eventController.allEvents.length}');
+    
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('$categoryLabel Events'),
+//         backgroundColor: Colors.red, // Make it obvious this is the test version
+//         foregroundColor: Colors.white,
+//         actions: [
+//           // Test button that just prints
+//           IconButton(
+//             icon: const Icon(Icons.filter_list),
+//             onPressed: () {
+//               print('🚨 FILTER BUTTON TAPPED! 🚨');
+//               print('🚨 FILTER BUTTON TAPPED! 🚨');
+//               print('🚨 FILTER BUTTON TAPPED! 🚨');
+              
+//               // Also try to show a snackbar
+//               ScaffoldMessenger.of(context).showSnackBar(
+//                 const SnackBar(
+//                   content: Text('FILTER BUTTON WORKS!'),
+//                   backgroundColor: Colors.green,
+//                   duration: Duration(seconds: 2),
+//                 ),
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//       body: Center(
+//         child: Container(
+//           padding: const EdgeInsets.all(20),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Icon(Icons.bug_report, size: 100, color: Colors.red),
+//               SizedBox(height: 20),
+//               Text(
+//                 'TEST VERSION ACTIVE',
+//                 style: TextStyle(
+//                   fontSize: 24,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.red,
+//                 ),
+//               ),
+//               SizedBox(height: 20),
+//               Text('Category: $categoryLabel'),
+//               Text('Total Events: ${eventController.allEvents.length}'),
+//               SizedBox(height: 40),
+//               Container(
+//                 padding: EdgeInsets.all(16),
+//                 decoration: BoxDecoration(
+//                   border: Border.all(color: Colors.red, width: 2),
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: Column(
+//                   children: [
+//                     Text(
+//                       'TAP THE FILTER ICON IN APP BAR',
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.red,
+//                       ),
+//                     ),
+//                     Text('Should show green snackbar'),
+//                     Text('Should print messages in console'),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EventModel {
@@ -19,6 +17,8 @@ class EventModel {
   final String? startTime;
   final double? ticketPrice;
   final String organizerName;
+  final DateTime eventDate;
+  bool notificationSent;
 
   EventModel({
     required this.id, 
@@ -37,26 +37,44 @@ class EventModel {
     this.startTime,
     this.ticketPrice,
     required this.organizerName,
+    required this.eventDate,
+    this.notificationSent = false,
   });
 
   factory EventModel.fromMap(Map<String, dynamic> map) {
     return EventModel(
       id: map['id'] ?? '', // Read id from map
       address: map['address'] as String?,
-      ageLimit: List<String>.from(map['ageLimit'] ?? []),
+      ageLimit: map['ageLimit'] != null
+          ? List<String>.from(map['ageLimit'])
+          : null,
       categoryId: map['categoryId'] as String?,
       city: map['city'] as String?,
-      createdAt: (map['createdAt'] as Timestamp?)?.toDate(),
+      createdAt: map['createdAt'] != null
+          ? (map['createdAt'] as Timestamp).toDate()
+          : null,
       date: map['date'] as String?,
       description: map['description'] as String?,
       duration: map['duration'] as String?,
       endTime: map['endTime'] as String?,
-      images: List<String>.from(map['images'] ?? []),
-      languages: List<String>.from(map['languages'] ?? []),
+      images: map['images'] != null
+          ? List<String>.from(map['images'])
+          : null,
+      languages: map['languages'] != null
+          ? List<String>.from(map['languages'])
+          : null,
       name: map['name'] as String?,
       startTime: map['startTime'] as String?,
-      ticketPrice: (map['ticketPrice'] as num?)?.toDouble(),
+      ticketPrice: map['ticketPrice'] != null
+          ? (map['ticketPrice'] as num).toDouble()
+          : null,
       organizerName: map['organizerName'] as String? ?? '',
+      eventDate: map['eventDate'] != null
+          ? (map['eventDate'] is Timestamp
+              ? (map['eventDate'] as Timestamp).toDate()
+              : DateTime.parse(map['eventDate'].toString()))
+          : DateTime.now(),
+      notificationSent: map['notificationSent'] as bool? ?? false,
     );
   }
 
@@ -78,6 +96,8 @@ class EventModel {
       'startTime': startTime,
       'ticketPrice': ticketPrice,
       'organizerName': organizerName,
+      'eventDate': Timestamp.fromDate(eventDate),
+      'notificationSent': notificationSent,
     };
   }
 }

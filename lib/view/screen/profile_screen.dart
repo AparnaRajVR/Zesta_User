@@ -1,161 +1,152 @@
+
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zesta_1/services/firebase_control.dart';
+import 'package:zesta_1/services/profile_controller.dart';
+import 'package:zesta_1/view/widget/edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final FirebaseControl _firebaseControl = Get.find<FirebaseControl>();
+  ProfileScreen({super.key});
 
-   ProfileScreen({super.key});
-  
+  final Rxn<Map<String, dynamic>> userData = Rxn<Map<String, dynamic>>();
+  final RxBool loading = true.obs;
+  final ProfileController profileController = ProfileController();
+  final user = FirebaseAuth.instance.currentUser;
+
+  void fetchProfile() async {
+    loading.value = true;
+    userData.value = await profileController.fetchProfile();
+    loading.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Profile'),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.logout),
-        //     onPressed: () {
-        //       _firebaseControl.signOut();
-        //     },
-        //   ),
-        // ],
-      ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: _getUserData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error loading profile"));
-          } else if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(child: Text("No profile data found"));
-          }
-          
-         
-          Map<String, dynamic> userData = 
-              snapshot.data!.data() as Map<String, dynamic>;
-          
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.blue.shade100,
-                  child: Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.blue,
+    fetchProfile();
+
+    return Obx(() {
+      if (loading.value) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
+      final data = userData.value;
+      if (data == null) {
+        return const Scaffold(
+          body: Center(child: Text("No profile found.")),
+        );
+      }
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Profile"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+                final updated = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => EditProfileScreen(data: data)),
+                );
+                if (updated == true) fetchProfile();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'Logout',
+              onPressed: () async {
+                await FirebaseControl().signOut();
+              },
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: ListView(
+            children: [
+              Center(
+                child:  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.deepPurple.shade200,
+                    child: user?.photoURL != null
+                        ? ClipOval(
+                            child: Image.network(
+                              user!.photoURL!,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.deepPurple.shade700,
+                          ),
                   ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  data['fullName'] ?? '',
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 24),
-                Text(
-                  userData['fullName'] ?? 'Zesta User',
-                  style: TextStyle(
-                    fontSize: 24, 
-                    fontWeight: FontWeight.bold
-                  ),
+              ),
+              Center(
+                child: Text(
+                  data['email'] ?? '',
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  userData['email'] ?? '',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                SizedBox(height: 40),
-                // _buildProfileCard(
-                //   title: 'Account Information',
-                //   children: [
-                //     _buildInfoRow('Role', userData['role'] ?? 'zestauser'),
-                //     _buildInfoRow('User ID', userData['uid'] ?? ''),
-                //   ],
-                // ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _firebaseControl.signOut();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  ),
+              ),
+              const SizedBox(height: 16),
+              if ((data['bio'] ?? "").isNotEmpty)
+                Center(
                   child: Text(
-                    'Logout', 
-                    style: TextStyle(fontSize: 16, color: Colors.white)
+                    data['bio'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                children: List<Widget>.from(
+                  (data['categories'] ?? []).map<Widget>(
+                    (cat) => Chip(label: Text(cat)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+const Text(
+                "About Us",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const SizedBox(height: 18),
+              
+              const Text(
+                "Privacy Policy",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const SizedBox(height: 18),
+              
+              const Text(
+                "Terms and Conditions",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              
+              const SizedBox(height: 32),
+              Center(
+                child: Text(
+                  "Version 1.0.0", // Replace with dynamic version if needed
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ),
+              
 
-  Future<DocumentSnapshot> _getUserData() async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      throw Exception('No user logged in.');
-    }
-    
-    return FirebaseFirestore.instance
-        .collection('zesta_user')
-        .doc(currentUser.uid)
-        .get();
-  }
-
-  // Widget _buildProfileCard({required String title, required List<Widget> children}) {
-  //   return Card(
-  //     elevation: 4,
-  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16.0),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             title,
-  //             style: TextStyle(
-  //               fontSize: 18,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           SizedBox(height: 12),
-  //           ...children,
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[700],
-            ),
+            ],
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

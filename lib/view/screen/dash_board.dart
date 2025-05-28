@@ -14,6 +14,7 @@ import 'package:zesta_1/view/widget/bottom_nav.dart';
 import 'package:zesta_1/view/widget/event/category_event.dart';
 import 'package:zesta_1/view/widget/event/category_filter.dart';
 import 'package:zesta_1/view/widget/event/event_carousel.dart';
+import 'package:zesta_1/view/widget/event/past_event_view.dart';
 import 'package:zesta_1/view/widget/event/recommented_item.dart';
 import 'package:zesta_1/view/widget/location_dialogue.dart';
 
@@ -69,6 +70,8 @@ class Dashboard extends StatelessWidget {
                     const SizedBox(height: 16),
                     
                     RecommendedItemsWidget(events: eventController.allEvents),
+                    const SizedBox(height: 16),
+                    PastEventsHorizontalList(events: eventController.allEvents),
                   ],
                 ),
               ),

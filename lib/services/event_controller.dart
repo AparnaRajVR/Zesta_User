@@ -154,22 +154,35 @@ void searchEvents(String query) {
   events.assignAll(filtered);
 }
 
-// Optionally, keep track of the last category filter for resets:
+
 String? _lastCategoryLabel;
 
-// void filterEventsByLabel(String label) {
-//   _lastCategoryLabel = label;
-//   final matchedCategoryId = categoryMap.entries
-//       .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
-//           orElse: () => const MapEntry('', ''))
-//       .key;
 
-//   if (matchedCategoryId.isNotEmpty) {
-//     events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
-//   } else {
-//     events.assignAll(allEvents); // Fallback to all
-//   }
-// }
 
+List<EventModel> get pastWeekEvents {
+  final now = DateTime.now();
+  final oneWeekAgo = now.subtract(const Duration(days: 7));
+  return events.where((event) {
+    final eventDate = _parseEventDate(event.date);
+    // Only include events that happened in the last 7 days (before now)
+    return eventDate != null &&
+        eventDate.isBefore(now) &&
+        eventDate.isAfter(oneWeekAgo);
+  }).toList();
+}
+
+// Helper to parse event.date safely
+DateTime? _parseEventDate(dynamic date) {
+  if (date == null) return null;
+  if (date is DateTime) return date;
+  if (date is String && date.isNotEmpty) {
+    try {
+      return DateTime.parse(date);
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
 
 }
