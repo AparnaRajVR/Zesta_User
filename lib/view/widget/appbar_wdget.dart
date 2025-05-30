@@ -40,14 +40,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.search, color: AppColors.textlight),
           onPressed: () {},
         ),
-           IconButton(
-          icon: const Icon(FontAwesomeIcons.heart, color: AppColors.textlight),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.notifications, color: AppColors.textlight),
-          onPressed: () {},
-        ),
+        //    IconButton(
+        //   icon: const Icon(FontAwesomeIcons.heart, color: AppColors.textlight),
+        //   onPressed: () {},
+        // ),
+        // IconButton(
+        //   icon: const Icon(Icons.notifications, color: AppColors.textlight),
+        //   onPressed: () {},
+        // ),
       ],
     );
   }

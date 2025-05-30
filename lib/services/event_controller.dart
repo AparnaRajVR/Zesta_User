@@ -26,7 +26,7 @@ class EventController extends GetxController {
   void onInit() {
     fetchEvents();
     fetchCategories();
-    fetchUserSelectedCategories(); // <-- NEW: fetch user's categories
+    fetchUserSelectedCategories(); 
     _loadFavorites();
     everAll([events, favoriteEvents], (_) {
       _updateFavoriteEventsList();

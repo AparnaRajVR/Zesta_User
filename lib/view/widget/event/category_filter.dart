@@ -1,14 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/event_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:zesta_1/services/filter_service.dart';
+import 'package:zesta_1/view/widget/event/filter_event_card.dart';
 
 class FilteredEventsGridPage extends StatelessWidget {
   final String categoryLabel;
-  FilteredEventsGridPage({Key? key, required this.categoryLabel}) : super(key: key);
+  FilteredEventsGridPage({super.key, required this.categoryLabel});
 
   final FilterController filterController = Get.put(FilterController());
   final TextEditingController searchController = TextEditingController();
@@ -173,30 +173,33 @@ class FilteredEventsGridPage extends StatelessWidget {
             icon: Icon(Icons.filter_list),
             onPressed: () => _showFilterDialog(context),
           ),
-          IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: () {
-              filterController.clearFilters(categoryLabel);
-              searchController.clear();
-              searchQuery.value = '';
-            },
-          ),
+          
         ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                labelText: 'Search events',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) => searchQuery.value = value,
-            ),
-          ),
+         Padding(
+  padding: const EdgeInsets.all(12.0),
+  child: TextField(
+    controller: searchController,
+    decoration: InputDecoration(
+      labelText: 'Search events',
+      prefixIcon: Icon(Icons.search),
+      border: OutlineInputBorder(),
+      suffixIcon: Obx(() => searchQuery.value.isNotEmpty
+          ? IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                searchController.clear();
+                searchQuery.value = '';
+              },
+            )
+          : SizedBox.shrink()),
+    ),
+    onChanged: (value) => searchQuery.value = value,
+  ),
+),
+
           Obx(() {
             final events = filterController.filteredEvents.where((event) {
               final name = (event.name ?? '').toLowerCase();
@@ -244,7 +247,7 @@ class FilteredEventsGridPage extends StatelessWidget {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   final event = events[index];
-                  return _EventCard(event: event);
+                  return filter_eventCard(event: event);
                 },
               );
             }),
@@ -255,64 +258,3 @@ class FilteredEventsGridPage extends StatelessWidget {
   }
 }
 
-class _EventCard extends StatelessWidget {
-  final EventModel event;
-
-  const _EventCard({Key? key, required this.event}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final String? imageUrl = (event.images != null && event.images!.isNotEmpty)
-        ? event.images!.first
-        : null;
-
-    return Card(
-      elevation: 3,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          imageUrl != null
-              ? Image.network(imageUrl, height: 120, fit: BoxFit.cover)
-              : Container(
-                  height: 120,
-                  color: Colors.grey[300],
-                  child: Icon(Icons.event, size: 60, color: Colors.grey),
-                ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              event.name ?? 'No Name',
-              style: TextStyle(fontWeight: FontWeight.bold),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              event.city ?? '',
-              style: TextStyle(color: Colors.grey[600]),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              (event.ticketPrice == null || event.ticketPrice == 0)
-                  ? 'Free'
-                  : '₹${event.ticketPrice!.toStringAsFixed(0)}',
-              style: TextStyle(
-                color: (event.ticketPrice == null || event.ticketPrice == 0)
-                    ? Colors.green
-                    : Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
