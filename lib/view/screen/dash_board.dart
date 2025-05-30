@@ -66,10 +66,11 @@ class Dashboard extends StatelessWidget {
                         Get.to(() => FilteredEventsGridPage(categoryLabel: label));
                       },),
                     const SizedBox(height: 18),
-                    EventCarousel(events: eventController.allEvents),
+                    EventCarousel(events: eventController.upcomingEvents),
+
                     const SizedBox(height: 16),
                     
-                    RecommendedItemsWidget(events: eventController.allEvents),
+                    RecommendedItemsWidget(events: eventController. upcomingEventsByUserInterest),
                     const SizedBox(height: 16),
                     PastEventsHorizontalList(events: eventController.allEvents),
                   ],

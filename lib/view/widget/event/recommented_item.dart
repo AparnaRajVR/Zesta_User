@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,10 +10,9 @@ import 'package:zesta_1/view/widget/event/event_details.dart';
 import 'package:zesta_1/view/widget/event/event_grid.dart';
 
 class RecommendedItemsWidget extends StatelessWidget {
-  final List<EventModel> events;
   final eventController = Get.find<EventController>();
 
-  RecommendedItemsWidget({super.key, required this.events});
+  RecommendedItemsWidget({super.key, required List<EventModel> events});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +22,15 @@ class RecommendedItemsWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children:  [
-            Text(
+            const Text(
               "Upcoming Events",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
               onTap: () {
-                Get.to( AllEventsGridPage(events: events));
+                Get.to(() => AllEventsGridPage(
+                  events: eventController.upcomingEventsByUserInterest,
+                ));
               },
               child: Text(
                 "See All >",
@@ -39,47 +41,75 @@ class RecommendedItemsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Obx(() {
-          if (eventController.categoryMap.isEmpty ||
+          // Get filtered events
+          final filteredEvents = eventController.upcomingEventsByUserInterest;
+
+          if (eventController.categoryMap.isEmpty || 
               eventController.events.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (filteredEvents.isEmpty) {
+            return Container(
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/no_events.png',
+                      width: 120,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text("No upcoming events in your interests"),
+                  ],
+                ),
+              ),
+            );
+          }
+
           return SizedBox(
-            height: 250, 
-           
-            
+            height: 250,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: eventController.events.length,
+              itemCount: filteredEvents.length,
               itemBuilder: (context, index) {
-                final event = eventController.events[index];
-                final categoryName =
+                final event = filteredEvents[index];
+                final categoryName = 
                     eventController.getCategoryName(event.categoryId ?? '');
-               
-final formattedDate = event.date != null
-    ? DateFormat('MMMM d yyyy').format(DateTime.parse(event.date!))
-    : 'Coming Soon';
 
-return Padding(
-  padding: const EdgeInsets.only(right: 12),
-  child: InkWell(
-      onTap: () {
-      
-      Get.to(() => EventDetailsPage(event: event, eventId: '',));
-    },
-    child: EventCard(
-      imageUrl: event.images?.isNotEmpty ?? false
-          ? event.images!.first
-          : 'https://via.placeholder.com/200x150',
-      date: formattedDate,
-      eventName: event.name ?? 'Unnamed Event',
-      location: event.city ?? 'Unknown Location',
-      categoryName: categoryName,
-    ),
-  ),
-);
-            
-                
+                // Safe date parsing
+                DateTime? eventDate;
+                if (event.date is DateTime) {
+                  eventDate = event.date as DateTime;
+                } else if (event.date is String) {
+                  eventDate = DateTime.tryParse(event.date as String);
+                }
+                final formattedDate = eventDate != null 
+                    ? DateFormat('MMMM d yyyy').format(eventDate)
+                    : 'Coming Soon';
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(() => EventDetailsPage(event: event, eventId: ''));
+                    },
+                    child: EventCard(
+                      imageUrl: event.images?.isNotEmpty ?? false
+                          ? event.images!.first
+                          : 'https://via.placeholder.com/200x150',
+                      date: formattedDate,
+                      eventName: event.name ?? 'Unnamed Event',
+                      location: event.city ?? 'Unknown Location',
+                      categoryName: categoryName,
+                    ),
+                  ),
+                );
               },
             ),
           );

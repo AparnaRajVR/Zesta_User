@@ -1,83 +1,7 @@
 
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:zesta_1/dependency_injection/image_controller.dart';
-
-// class EventImageSlider extends StatelessWidget {
-//   final List<String> images;
-//   final double? height;
-//   final BorderRadius? borderRadius;
-
-//   EventImageSlider({
-//     super.key,
-//     required this.images,
-//     this.height,
-//     this.borderRadius,
-//   });
-
-//   final ImageSliderController controller = Get.put(ImageSliderController());
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (images.isEmpty) {
-//       return Container(
-//         height: height ?? 180,
-//         decoration: BoxDecoration(
-//           color: Colors.grey[300],
-//           borderRadius: borderRadius ?? BorderRadius.circular(12),
-//         ),
-//         child: const Center(child: Icon(Icons.image_not_supported, size: 60)),
-//       );
-//     }
-
-//     return Stack(
-//       alignment: Alignment.bottomCenter,
-//       children: [
-//         SizedBox(
-//           height: height ?? 180,
-//           child: PageView.builder(
-//             itemCount: images.length,
-//             onPageChanged: (index) => controller.currentPage.value = index,
-//             itemBuilder: (context, index) {
-//               return ClipRRect(
-//                 borderRadius: borderRadius ?? BorderRadius.circular(12),
-//                 child: Image.network(
-//                   images[index],
-//                   fit: BoxFit.cover,
-//                   width: double.infinity,
-//                   errorBuilder: (context, error, stackTrace) =>
-//                       Container(
-//                         color: Colors.grey[300],
-//                         child: const Center(child: Icon(Icons.broken_image, size: 60)),
-//                       ),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//         Positioned(
-//           bottom: 12,
-//           child: Obx(() => Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: List.generate(images.length, (index) {
-//               return Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 4),
-//                 child: CircleAvatar(
-//                   radius: 4,
-//                   backgroundColor: controller.currentPage.value == index
-//                       ? Colors.yellow
-//                       : Colors.grey[400],
-//                 ),
-//               );
-//             }),
-//           )),
-//         ),
-//       ],
-//     );
-//   }
-// }import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zesta_1/constant/color.dart';
 
 class EventImageSlider extends StatelessWidget {
   final List<String> images;
@@ -95,16 +19,24 @@ class EventImageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (images.isEmpty) {
-      return Container(
-        height: height ?? 180,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: borderRadius ?? BorderRadius.circular(12),
-        ),
-        child: const Center(child: Icon(Icons.image_not_supported, size: 60)),
-      );
-    }
+   if (images.isEmpty) {
+  return Container(
+    height: height ?? 180,
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      borderRadius: borderRadius ?? BorderRadius.circular(12),
+    ),
+    child: ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.circular(12),
+      child: Image.asset(
+        'assets/images/no_image.jpg', 
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+    ),
+  );
+}
+
 
     controller.pageController = PageController(
       initialPage: controller.currentPage.value,
@@ -130,7 +62,7 @@ class EventImageSlider extends StatelessWidget {
                   width: double.infinity,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.grey[300],
-                    child: const Center(child: Icon(Icons.broken_image, size: 60)),
+                    child: const Center(child: Icon(Icons.broken_image, size: 60,)),
                   ),
                 ),
               );
@@ -147,7 +79,7 @@ class EventImageSlider extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 6,
                   backgroundColor: controller.currentPage.value == index
-                      ? Colors.yellow[700]
+                      ? AppColors.primary
                       : Colors.grey[600],
                 ),
               );

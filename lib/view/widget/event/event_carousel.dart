@@ -7,7 +7,7 @@ import 'package:zesta_1/view/widget/event/image_slider.dart';
 class EventCarousel extends StatelessWidget {
   final List<EventModel> events;
 
-  const EventCarousel({Key? key, required this.events}) : super(key: key);
+  const EventCarousel({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {

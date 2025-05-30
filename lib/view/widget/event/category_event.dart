@@ -1,6 +1,8 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zesta_1/view/widget/event/category_icon_grid.dart';
 
 class CategoryIconWidget extends StatelessWidget {
   final void Function(String label) onCategoryTap;
@@ -21,6 +23,23 @@ class CategoryIconWidget extends StatelessWidget {
       {'icon': FontAwesomeIcons.bars, 'label': 'See All'},
     ];
 
+    void handleTap(String label) {
+      if (label == 'See All') {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => CategoryGridScreen(
+              onCategoryTap: (selectedLabel) {
+                // Navigator.of(context).pop(); // Close the grid
+                onCategoryTap(selectedLabel); // Call the original callback
+              },
+            ),
+          ),
+        );
+      } else {
+        onCategoryTap(label);
+      }
+    }
+
     return SizedBox(
       height: 80,
       child: ListView.builder(
@@ -31,7 +50,7 @@ class CategoryIconWidget extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
-              onTap: () => onCategoryTap(category['label'] as String),
+              onTap: () => handleTap(category['label'] as String),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -59,4 +78,3 @@ class CategoryIconWidget extends StatelessWidget {
     );
   }
 }
-

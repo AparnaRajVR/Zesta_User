@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zesta_1/model/event_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EventController extends GetxController {
   var events = <EventModel>[].obs;
@@ -12,6 +13,9 @@ class EventController extends GetxController {
   var favoriteEvents = <String>[].obs;
   var favoriteEventsList = <EventModel>[].obs;
   Timer? _debounceTimer;
+
+  // NEW: Store user-selected categories
+  final RxList<String> userSelectedCategories = <String>[].obs;
 
   List<EventModel> get allEvents => events;
 
@@ -22,12 +26,21 @@ class EventController extends GetxController {
   void onInit() {
     fetchEvents();
     fetchCategories();
+    fetchUserSelectedCategories(); // <-- NEW: fetch user's categories
     _loadFavorites();
     everAll([events, favoriteEvents], (_) {
       _updateFavoriteEventsList();
-      // log('FavoriteEventsList updated: ${favoriteEventsList.length}');
     });
     super.onInit();
+  }
+
+  // NEW: Fetch user's selected categories from Firestore
+  Future<void> fetchUserSelectedCategories() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    final doc = await FirebaseFirestore.instance.collection('user_profiles').doc(uid).get();
+    final cats = doc.data()?['categories'] as List<dynamic>? ?? [];
+    userSelectedCategories.assignAll(cats.cast<String>());
   }
 
   void fetchEvents() async {
@@ -114,75 +127,102 @@ class EventController extends GetxController {
     _debounceTimer?.cancel();
     super.onClose();
   }
+
   void filterEventsByLabel(String label) {
-  final matchedCategoryId = categoryMap.entries
-      .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
-          orElse: () => const MapEntry('', ''))
-      .key;
+    final matchedCategoryId = categoryMap.entries
+        .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
+            orElse: () => const MapEntry('', ''))
+        .key;
 
-  if (matchedCategoryId.isNotEmpty) {
-    events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
-  } else {
-    events.assignAll(allEvents); // Fallback to all
-  }
-}
-void searchEvents(String query) {
-  // If you want to search within the currently filtered list (e.g. by category), use 'events'
-  // If you want to search within all events, use 'allEvents'
-  if (query.isEmpty) {
-    // If you want to reset to category-filtered events:
-    if (_lastCategoryLabel != null) {
-      filterEventsByLabel(_lastCategoryLabel!);
+    if (matchedCategoryId.isNotEmpty) {
+      events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
     } else {
-      events.assignAll(allEvents);
+      events.assignAll(allEvents); // Fallback to all
     }
-    return;
   }
 
-  final lowerQuery = query.toLowerCase();
-  final filtered = events.where((event) {
-    final name = event.name?.toLowerCase() ?? '';
-    final desc = event.description?.toLowerCase() ?? '';
-    final city = event.city?.toLowerCase() ?? '';
-    final organizer = event.organizerName.toLowerCase();
-    return name.contains(lowerQuery) ||
-        desc.contains(lowerQuery) ||
-        city.contains(lowerQuery) ||
-        organizer.contains(lowerQuery);
-  }).toList();
+  void searchEvents(String query) {
+    if (query.isEmpty) {
+      if (_lastCategoryLabel != null) {
+        filterEventsByLabel(_lastCategoryLabel!);
+      } else {
+        events.assignAll(allEvents);
+      }
+      return;
+    }
 
-  events.assignAll(filtered);
-}
+    final lowerQuery = query.toLowerCase();
+    final filtered = events.where((event) {
+      final name = event.name?.toLowerCase() ?? '';
+      final desc = event.description?.toLowerCase() ?? '';
+      final city = event.city?.toLowerCase() ?? '';
+      final organizer = event.organizerName.toLowerCase();
+      return name.contains(lowerQuery) ||
+          desc.contains(lowerQuery) ||
+          city.contains(lowerQuery) ||
+          organizer.contains(lowerQuery);
+    }).toList();
 
+    events.assignAll(filtered);
+  }
 
-String? _lastCategoryLabel;
+  String? _lastCategoryLabel;
 
+  List<EventModel> get pastWeekEvents {
+    final now = DateTime.now();
+    final oneWeekAgo = now.subtract(const Duration(days: 7));
+    return events.where((event) {
+      final eventDate = _parseEventDate(event.date);
+      return eventDate != null &&
+          eventDate.isBefore(now) &&
+          eventDate.isAfter(oneWeekAgo);
+    }).toList();
+  }
 
+  // Helper to parse event.date safely
+  DateTime? _parseEventDate(dynamic date) {
+    if (date == null) return null;
+    if (date is DateTime) return date;
+    if (date is String && date.isNotEmpty) {
+      try {
+        return DateTime.parse(date);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
 
-List<EventModel> get pastWeekEvents {
+  // NEW: Upcoming events filtered by user interest
+ List<EventModel> get upcomingEventsByUserInterest {
   final now = DateTime.now();
-  final oneWeekAgo = now.subtract(const Duration(days: 7));
+  // Convert user-selected category NAMES to their IDs
+  final userSelectedCategoryIds = categoryMap.entries
+      .where((entry) => userSelectedCategories.contains(entry.value))
+      .map((entry) => entry.key)
+      .toList();
+
   return events.where((event) {
     final eventDate = _parseEventDate(event.date);
-    // Only include events that happened in the last 7 days (before now)
-    return eventDate != null &&
-        eventDate.isBefore(now) &&
-        eventDate.isAfter(oneWeekAgo);
+    final isUpcoming = eventDate != null && 
+        !eventDate.isBefore(DateTime(now.year, now.month, now.day));
+        
+    // If no categories selected, show all upcoming
+    if (userSelectedCategoryIds.isEmpty) return isUpcoming;
+    
+    // Check if event's categoryId matches any selected category ID
+    return isUpcoming && 
+        userSelectedCategoryIds.contains(event.categoryId);
   }).toList();
 }
 
-// Helper to parse event.date safely
-DateTime? _parseEventDate(dynamic date) {
-  if (date == null) return null;
-  if (date is DateTime) return date;
-  if (date is String && date.isNotEmpty) {
-    try {
-      return DateTime.parse(date);
-    } catch (_) {
-      return null;
-    }
-  }
-  return null;
-}
 
+  // Keep your existing upcomingEvents if you want all upcoming events
+  List<EventModel> get upcomingEvents {
+    final now = DateTime.now();
+    return events.where((event) {
+      final eventDate = _parseEventDate(event.date);
+      return eventDate != null && !eventDate.isBefore(DateTime(now.year, now.month, now.day));
+    }).toList();
+  }
 }
