@@ -12,6 +12,7 @@ class FilterController extends GetxController {
   var includeFreeEvents = true.obs;
   var selectedLocation = 'All Locations'.obs;
   var availableLocations = <String>['All Locations'].obs;
+  bool isInitialized = false;
 
   // Filtered events
   var filteredEvents = [].obs;

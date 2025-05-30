@@ -122,51 +122,24 @@ class EventController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    _debounceTimer?.cancel();
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   _debounceTimer?.cancel();
+  //   super.onClose();
+  // }
 
-  void filterEventsByLabel(String label) {
-    final matchedCategoryId = categoryMap.entries
-        .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
-            orElse: () => const MapEntry('', ''))
-        .key;
+  // void filterEventsByLabel(String label) {
+  //   final matchedCategoryId = categoryMap.entries
+  //       .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
+  //           orElse: () => const MapEntry('', ''))
+  //       .key;
 
-    if (matchedCategoryId.isNotEmpty) {
-      events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
-    } else {
-      events.assignAll(allEvents); // Fallback to all
-    }
-  }
-
-  void searchEvents(String query) {
-    if (query.isEmpty) {
-      if (_lastCategoryLabel != null) {
-        filterEventsByLabel(_lastCategoryLabel!);
-      } else {
-        events.assignAll(allEvents);
-      }
-      return;
-    }
-
-    final lowerQuery = query.toLowerCase();
-    final filtered = events.where((event) {
-      final name = event.name?.toLowerCase() ?? '';
-      final desc = event.description?.toLowerCase() ?? '';
-      final city = event.city?.toLowerCase() ?? '';
-      final organizer = event.organizerName.toLowerCase();
-      return name.contains(lowerQuery) ||
-          desc.contains(lowerQuery) ||
-          city.contains(lowerQuery) ||
-          organizer.contains(lowerQuery);
-    }).toList();
-
-    events.assignAll(filtered);
-  }
-
-  String? _lastCategoryLabel;
+  //   if (matchedCategoryId.isNotEmpty) {
+  //     events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
+  //   } else {
+  //     events.assignAll(allEvents); // Fallback to all
+  //   }
+  // }
 
   List<EventModel> get pastWeekEvents {
     final now = DateTime.now();
@@ -178,7 +151,6 @@ class EventController extends GetxController {
           eventDate.isAfter(oneWeekAgo);
     }).toList();
   }
-
   // Helper to parse event.date safely
   DateTime? _parseEventDate(dynamic date) {
     if (date == null) return null;
