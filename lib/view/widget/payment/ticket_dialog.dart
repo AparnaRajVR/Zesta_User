@@ -60,7 +60,7 @@ class TicketDialog extends StatelessWidget {
       eventLocation: eventLocation,
       ticketCount: ticketCount,
       amountPaid: amountPaid,
-      barcode: '$eventName-$ticketCount-${DateTime.now().millisecondsSinceEpoch}',
+      barcode: '$eventName-$ticketCount-${DateTime.now().millisecondsSinceEpoch}', eventId:' eventId',
     );
     final ticketController = Get.put(TicketController());
     await ticketController.saveTicket(ticket);

@@ -61,8 +61,8 @@ class RecommendedItemsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/no_events.png',
-                      width: 120,
+                      'assets/images/no_image.png',
+                      width: 200,
                     ),
                     const SizedBox(height: 12),
                     const Text("No upcoming events in your interests"),

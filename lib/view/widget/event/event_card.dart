@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
+  
   final String imageUrl;
   final String date;
   final String eventName;
@@ -101,4 +102,3 @@ class EventCard extends StatelessWidget {
     );
   }
 }
-
