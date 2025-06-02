@@ -138,7 +138,8 @@ class BookingPage extends StatelessWidget {
                           IconButton(
                             icon: Icon(Icons.add_circle, color: AppColors.primary),
                             onPressed: () {
-                              ticketCount.value++;
+                                 if (ticketCount.value < 10) ticketCount.value++;
+                              // ticketCount.value++;
                             },
                           ),
                         ],
@@ -223,8 +224,20 @@ class BookingPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
+             SizedBox(height: 16),
+
+// NOTE AT THE BOTTOM
+Text(
+  "Note:\n- No refund will be provided after cancellation.\n- Each user can purchase a maximum of 10 tickets. Ticket quantity cannot be increased beyond 10 per user.",
+  style: TextStyle(
+    color: Colors.grey,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  ),
+),
         ],
       ),
+   
     );
   }
 }
