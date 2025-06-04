@@ -254,11 +254,31 @@ class FilteredEventsGridPage extends StatelessWidget {
     );
   }
 
-  List get _filteredEvents {
-    final query = searchQuery.value.toLowerCase();
-    return filterController.filteredEvents.where((event) {
-      final name = (event.name ?? '').toLowerCase();
-      return name.contains(query);
-    }).toList();
-  }
+ List get _filteredEvents {
+  final query = searchQuery.value.toLowerCase();
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+
+  return filterController.filteredEvents.where((event) {
+    final name = (event.name ?? '').toLowerCase();
+
+    // Parse event date safely
+    DateTime? eventDate;
+    if (event.date is DateTime) {
+      eventDate = event.date;
+    } else if (event.date is String && event.date.isNotEmpty) {
+      try {
+        eventDate = DateTime.parse(event.date);
+      } catch (_) {
+        eventDate = null;
+      }
+    }
+
+    // Only show events today or in the future
+    return name.contains(query) &&
+        eventDate != null &&
+        !eventDate.isBefore(today);
+  }).toList();
+}
+
 }

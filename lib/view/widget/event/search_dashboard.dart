@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/search_controller.dart';
+import 'package:zesta_1/view/widget/event/event_details.dart';
 
 class EventSearchPage extends StatelessWidget {
   final EventSearchController controller = Get.find<EventSearchController>();
@@ -81,70 +82,78 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Event Image (Use first image from images list or placeholder)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: event.images != null && event.images!.isNotEmpty
-                  ? Image.network(
-                      event.images!.first, // Use the first image
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
-                    )
-                  : _buildPlaceholderImage(),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.name ?? 'Unnamed Event',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    controller.eventController.getCategoryName(event.categoryId ?? ''),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    event.city ?? 'Unknown Location',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    formatEventDate(event.date),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
+    return InkWell
+    (
+       borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        // Navigate to the details page, passing the event
+        Get.to(() => EventDetailsPage(event: event, eventId: '',));
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Event Image (Use first image from images list or placeholder)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: event.images != null && event.images!.isNotEmpty
+                    ? Image.network(
+                        event.images!.first, // Use the first image
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
+                      )
+                    : _buildPlaceholderImage(),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.name ?? 'Unnamed Event',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      controller.eventController.getCategoryName(event.categoryId ?? ''),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      event.city ?? 'Unknown Location',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      formatEventDate(event.date),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

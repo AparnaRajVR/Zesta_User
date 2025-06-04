@@ -122,24 +122,7 @@ class EventController extends GetxController {
     }
   }
 
-  // @override
-  // void onClose() {
-  //   _debounceTimer?.cancel();
-  //   super.onClose();
-  // }
 
-  // void filterEventsByLabel(String label) {
-  //   final matchedCategoryId = categoryMap.entries
-  //       .firstWhere((entry) => entry.value.toLowerCase() == label.toLowerCase(),
-  //           orElse: () => const MapEntry('', ''))
-  //       .key;
-
-  //   if (matchedCategoryId.isNotEmpty) {
-  //     events.assignAll(allEvents.where((e) => e.categoryId == matchedCategoryId));
-  //   } else {
-  //     events.assignAll(allEvents); // Fallback to all
-  //   }
-  // }
 
   List<EventModel> get pastWeekEvents {
     final now = DateTime.now();
