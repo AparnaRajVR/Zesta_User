@@ -6,10 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/stripe_controller.dart';
+import 'package:zesta_1/services/ticket_controller.dart';
 import 'package:zesta_1/view/widget/payment/ticket_dialog.dart';
 
 class BookingPage extends StatelessWidget {
   final EventModel event;
+  final ticketController = Get.put(TicketController());
   BookingPage({super.key, required this.event});
 
   final RxInt ticketCount = 1.obs;
@@ -224,8 +226,8 @@ class BookingPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-             SizedBox(height: 16),
-
+          
+ SizedBox(height: 16),
 // NOTE AT THE BOTTOM
 Text(
   "Note:\n- No refund will be provided after cancellation.\n- Each user can purchase a maximum of 10 tickets. Ticket quantity cannot be increased beyond 10 per user.",

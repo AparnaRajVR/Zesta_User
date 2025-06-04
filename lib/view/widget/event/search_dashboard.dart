@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/search_controller.dart';
@@ -10,7 +10,6 @@ class EventSearchPage extends StatelessWidget {
   final TextEditingController searchController = TextEditingController();
 
   EventSearchPage({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -28,30 +27,29 @@ class EventSearchPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextField(
-  controller: searchController,
-  decoration: InputDecoration(
-    hintText: 'Search events...',
-    prefixIcon: const Icon(Icons.search, color: AppColors.textlight),
-    suffixIcon: Obx(() => controller.searchQuery.value.isNotEmpty
-        ? IconButton(
-            icon: const Icon(Icons.clear, color: AppColors.textlight),
-            onPressed: () {
-              searchController.clear();
-              controller.updateSearchQuery('');
-              FocusScope.of(context).unfocus(); // Dismiss keyboard
-            },
-          )
-        : const SizedBox()),
-    filled: true,
-    fillColor: Colors.grey[200],
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide.none,
-    ),
-  ),
-  onChanged: controller.updateSearchQuery,
-)
-
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search events...',
+                prefixIcon: const Icon(Icons.search, color: AppColors.textlight),
+                suffixIcon: Obx(() => controller.searchQuery.value.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, color: AppColors.textlight),
+                        onPressed: () {
+                          searchController.clear();
+                          controller.updateSearchQuery('');
+                          FocusScope.of(context).unfocus(); // Dismiss keyboard
+                        },
+                      )
+                    : const SizedBox()),
+                filled: true,
+                fillColor: Colors.grey[200],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              onChanged: controller.updateSearchQuery,
+            ),
           ),
           Expanded(
             child: Obx(() {
@@ -137,7 +135,7 @@ class EventCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    event.date ?? 'No Date',
+                    formatEventDate(event.date),
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -163,5 +161,16 @@ class EventCard extends StatelessWidget {
         color: Colors.grey,
       ),
     );
+  }
+}
+
+/// Helper to format date as "24 January 2025"
+String formatEventDate(String? dateString) {
+  if (dateString == null || dateString.isEmpty) return 'No Date';
+  try {
+    final date = DateTime.parse(dateString);
+    return DateFormat('d MMMM yyyy').format(date); // e.g., 24 January 2025
+  } catch (e) {
+    return dateString; // fallback if parsing fails
   }
 }

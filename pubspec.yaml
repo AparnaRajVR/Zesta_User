@@ -52,11 +52,11 @@ dependencies:
   google_nav_bar: ^5.0.7
   google_sign_in: ^6.2.2
   image_picker: ^1.1.2
- 
   intl: ^0.20.2
   qr_flutter: ^4.1.0
   shared_preferences: ^2.5.3
   ticket_widget: ^1.0.2
+  webview_flutter: ^4.13.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
