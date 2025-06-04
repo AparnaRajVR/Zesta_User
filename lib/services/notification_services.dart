@@ -14,7 +14,7 @@ class NotificationService {
         android: initializationSettingsAndroid,
       ),
       onDidReceiveNotificationResponse: (details) {
-        // Handle notification click
+        // Handle notification tap
       },
     );
   }
@@ -42,28 +42,4 @@ class NotificationService {
     );
   }
 
-//   static Future<void> showCustomNotification({
-//   required String title,
-//   required String body,
-// }) async {
-//   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-//     'purchase_channel', 
-//     'Purchase Notifications',
-//     importance: Importance.max,
-//     priority: Priority.high,
-//   );
-
-//   const NotificationDetails platformDetails = NotificationDetails(
-//     android: androidDetails,
-//   );
-
-//   await flutterLocalNotificationsPlugin.show(
-//     0, // notification id
-//     title,
-//     body,
-//     platformDetails,
-//   );
-// }
-
-// }
 }

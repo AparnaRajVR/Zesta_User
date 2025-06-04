@@ -19,8 +19,6 @@ class FirebaseControl extends GetxController {
   
   
 
-
-
   String? get userEmail => _firebaseUser.value?.email;
 
   @override
@@ -29,13 +27,13 @@ class FirebaseControl extends GetxController {
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
-  // Helper: Check if user has selected categories, and navigate accordingly
+  //  Check if user has selected categories, and navigate accordingly
 Future<void> _navigateAfterAuth(User user) async {
   final userRef = FirebaseFirestore.instance.collection('user_profiles').doc(user.uid);
   final snapshot = await userRef.get();
   final data = snapshot.data();
 
-  // Defensive: categories must be a non-empty list
+  //  categories must be a non-empty list
   final categories = data?['categories'];
   if (categories == null || categories is! List || categories.isEmpty) {
     Get.offAll(() => CategorySelectPage());

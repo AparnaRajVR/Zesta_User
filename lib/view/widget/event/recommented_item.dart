@@ -6,7 +6,7 @@ import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/event_controller.dart';
 import 'package:zesta_1/view/widget/event/event_card.dart';
-import 'package:zesta_1/view/widget/event/event_details.dart';
+import 'package:zesta_1/view/screen/event_details.dart';
 import 'package:zesta_1/view/widget/event/event_grid.dart';
 
 class RecommendedItemsWidget extends StatelessWidget {
@@ -97,7 +97,7 @@ class RecommendedItemsWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 12),
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => EventDetailsPage(event: event, eventId: ''));
+                      Get.to(() => EventDetailsPage(event: event, ));
                     },
                     child: EventCard(
                       imageUrl: event.images?.isNotEmpty ?? false

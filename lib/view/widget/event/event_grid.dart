@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/event_controller.dart';
 import 'package:zesta_1/view/widget/event/event_card.dart';
-import 'package:zesta_1/view/widget/event/event_details.dart'; 
+import 'package:zesta_1/view/screen/event_details.dart'; 
 
 class AllEventsGridPage extends StatelessWidget {
   final List<EventModel> events;
@@ -47,7 +47,7 @@ class AllEventsGridPage extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    Get.to(() => EventDetailsPage(event: event, eventId: '',));
+                    Get.to(() => EventDetailsPage(event: event,));
                   },
                   child: EventCard(
                     imageUrl: event.images?.isNotEmpty ?? false

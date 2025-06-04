@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zesta_1/model/ticket_model.dart';
@@ -6,17 +5,15 @@ import 'package:zesta_1/model/ticket_model.dart';
 class TicketController extends GetxController {
   var tickets = <Ticket>[].obs;
 
-  // Reactive variables for ticket availability and button state
   var remainingTickets = 0.obs;
   var isButtonEnabled = false.obs;
   var isLoading = true.obs;
 
-  // You need to set these when user opens the event page
   late String eventId;
   late DateTime eventDate;
 
-  // Call this method when you have eventId and eventDate (e.g., when opening event details)
-  void listenEventAvailability({required String eventId, required DateTime eventDate}) {
+  void listenEventAvailability(
+      {required String eventId, required DateTime eventDate}) {
     this.eventId = eventId;
     this.eventDate = eventDate;
 
@@ -55,10 +52,7 @@ class TicketController extends GetxController {
         .orderBy('eventDate', descending: true)
         .get();
 
-    tickets.value = snapshot.docs
-        .map((doc) => Ticket.fromMap(doc.data()))
-        .toList();
+    tickets.value =
+        snapshot.docs.map((doc) => Ticket.fromMap(doc.data())).toList();
   }
-
-
 }

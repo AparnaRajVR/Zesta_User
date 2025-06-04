@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/services/event_controller.dart';
 
-import 'package:zesta_1/view/widget/event/event_details.dart';
+import 'package:zesta_1/view/screen/event_details.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
@@ -42,7 +42,7 @@ class FavoritesPage extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Get.to(() => EventDetailsPage(event: event, eventId: '',));
+                    Get.to(() => EventDetailsPage(event: event,));
                   });
                 },
                 child: Padding(

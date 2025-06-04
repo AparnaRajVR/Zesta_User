@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:zesta_1/constant/color.dart';
 
 class EventCard extends StatelessWidget {
   
@@ -27,7 +28,7 @@ class EventCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppColors.textlight,
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
@@ -80,12 +81,10 @@ class EventCard extends StatelessWidget {
               location,
               style: const TextStyle(
                 fontSize: 13,
-                color: Colors.grey,
+                color: AppColors.textaddn,
               ),
             ),
           ),
-
-          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Text(

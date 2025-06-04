@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zesta_1/constant/color.dart';
+import 'package:zesta_1/services/dashboard_controller.dart';
 
 import 'package:zesta_1/services/event_controller.dart';
 import 'package:zesta_1/view/screen/favourite_page.dart';
@@ -10,20 +11,11 @@ import 'package:zesta_1/view/widget/appbar_wdget.dart';
 import 'package:zesta_1/view/widget/bottom_nav.dart';
 
 import 'package:zesta_1/view/widget/event/category_event.dart';
-import 'package:zesta_1/view/widget/event/category_filter.dart';
+import 'package:zesta_1/view/widget/filter/category_filter.dart';
 import 'package:zesta_1/view/widget/event/event_carousel.dart';
 import 'package:zesta_1/view/widget/event/past_event_view.dart';
 import 'package:zesta_1/view/widget/event/recommented_item.dart';
 import 'package:zesta_1/view/widget/location_dialogue.dart';
-
-enum SelectedTab { home, ticket, analytics, profile }
-
-class DashboardController extends GetxController {
-  var selectedTabIndex = 0.obs;
-  void onTabSelected(int index) {
-    selectedTabIndex.value = index;
-  }
-}
 
 class Dashboard extends StatelessWidget {
   final EventController eventController = Get.find<EventController>();

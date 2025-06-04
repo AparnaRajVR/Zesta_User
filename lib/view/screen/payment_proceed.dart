@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +5,10 @@ import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/stripe_controller.dart';
 import 'package:zesta_1/services/ticket_controller.dart';
+import 'package:zesta_1/view/widget/payment/order_summary.dart';
+import 'package:zesta_1/view/widget/payment/payment_event_details.dart';
 import 'package:zesta_1/view/widget/payment/ticket_dialog.dart';
+import 'package:zesta_1/view/widget/payment/ticket_selection.dart';
 
 class BookingPage extends StatelessWidget {
   final EventModel event;
@@ -50,145 +51,16 @@ class BookingPage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
-          // Event Details Card
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.name ?? 'Event Name',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.second),
-                  ),
-                  SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: AppColors.primary, size: 16),
-                      SizedBox(width: 4),
-                      Text(event.city ?? 'Location TBA', style: TextStyle(color: AppColors.textaddn)),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today, color: AppColors.primary, size: 16),
-                      SizedBox(width: 4),
-                      Text(formatEventDate(event.date), style: TextStyle(color: AppColors.textaddn)),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.access_time, color: AppColors.primary, size: 16),
-                      SizedBox(width: 4),
-                      Text("${formatEventTime(event.startTime)}", style: TextStyle(color: AppColors.textaddn)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          EventDetailsCard(
+            event: event,
+            formatDate: formatEventDate,
+            formatTime: formatEventTime,
           ),
-
           SizedBox(height: 20),
-
-          // Ticket Selection Card
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Ticket Information",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.second),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Price per ticket:", style: TextStyle(color: AppColors.textaddn)),
-                      Text("₹${price.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Text("Number of Tickets", style: TextStyle(color: AppColors.textaddn)),
-                  SizedBox(height: 8),
-                  Obx(() => Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.remove_circle, color: AppColors.primary),
-                            onPressed: () {
-                              if (ticketCount.value > 1) ticketCount.value--;
-                            },
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[300]!),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              ticketCount.value.toString(),
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add_circle, color: AppColors.primary),
-                            onPressed: () {
-                                 if (ticketCount.value < 10) ticketCount.value++;
-                              // ticketCount.value++;
-                            },
-                          ),
-                        ],
-                      )),
-                ],
-              ),
-            ),
-          ),
-
+          TicketSelectionCard(ticketCount: ticketCount, price: price),
           SizedBox(height: 20),
-
-          // Order Summary Card
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Order Summary",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.second),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Total Amount"),
-                      Obx(() => Text(
-                            "₹${(ticketCount.value * price).toStringAsFixed(2)}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppColors.primary,
-                            ),
-                          )),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+          OrderSummaryCard(ticketCount: ticketCount, price: price),
           SizedBox(height: 24),
-
-          // Payment Button
           ElevatedButton(
             onPressed: () async {
               final controller = Get.find<PaymentController>();
@@ -211,7 +83,8 @@ class BookingPage extends StatelessWidget {
                   );
                 }
               } catch (e) {
-                Get.snackbar('Payment Failed', 'Something went wrong. Try again.');
+                Get.snackbar(
+                    'Payment Failed', 'Something went wrong. Try again.');
               }
             },
             style: ElevatedButton.styleFrom(
@@ -226,20 +99,17 @@ class BookingPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-          
- SizedBox(height: 16),
-// NOTE AT THE BOTTOM
-Text(
-  "Note:\n- No refund will be provided after cancellation.\n- Each user can purchase a maximum of 10 tickets. Ticket quantity cannot be increased beyond 10 per user.",
-  style: TextStyle(
-    color: Colors.grey,
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  ),
-),
+          SizedBox(height: 16),
+          Text(
+            "Note:\n- No refund will be provided after cancellation.\n- Each user can purchase a maximum of 10 tickets. Ticket quantity cannot be increased beyond 10 per user.",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
-   
     );
   }
 }

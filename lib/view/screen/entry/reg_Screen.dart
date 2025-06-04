@@ -8,9 +8,6 @@ import 'package:zesta_1/view/widget/registration_form.dart';
 import '../../../constant/color.dart';
 import '../../../services/firebase_control.dart';
 
-
-
-
 class RegScreen extends GetWidget<FirebaseControl> {
   const RegScreen({super.key});
 

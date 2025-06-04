@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:ticket_widget/ticket_widget.dart';
+import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/services/ticket_controller.dart';
 
 class TicketScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class TicketScreen extends StatelessWidget {
           return Obx(() {
   final tickets = ticketController.tickets;
 
-  // Sort tickets by eventDate (latest first)
+  
   final sortedTickets = List.of(tickets);
   sortedTickets.sort((a, b) {
     // If eventDate is a String in 'yyyy-MM-dd' or ISO format
@@ -59,11 +60,11 @@ class TicketScreen extends StatelessWidget {
                 SizedBox(height: 6),
                 Text(
                   "${ticket.eventDate} | ${ticket.eventTime}",
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 16, color: AppColors.textaddn),
                 ),
                 Text(
                   ticket.eventLocation,
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 16, color: AppColors.textaddn),
                 ),
                 SizedBox(height: 12),
                 Row(

@@ -14,7 +14,7 @@ class EventController extends GetxController {
   var favoriteEventsList = <EventModel>[].obs;
   Timer? _debounceTimer;
 
-  // NEW: Store user-selected categories
+  // Store user-selected categories
   final RxList<String> userSelectedCategories = <String>[].obs;
 
   List<EventModel> get allEvents => events;
@@ -34,7 +34,7 @@ class EventController extends GetxController {
     super.onInit();
   }
 
-  // NEW: Fetch user's selected categories from Firestore
+  //  Fetch user's selected categories from Firestore
   Future<void> fetchUserSelectedCategories() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
@@ -46,10 +46,10 @@ class EventController extends GetxController {
   void fetchEvents() async {
     try {
       final snapshot = await FirebaseFirestore.instance.collection('events').get();
-      log('Firestore snapshot size: ${snapshot.docs.length}');
+      // log('Firestore snapshot size: ${snapshot.docs.length}');
 
       final eventList = snapshot.docs.map((doc) {
-        log('Doc data: ${doc.data()}');
+        // log('Doc data: ${doc.data()}');
         final data = doc.data();
         data['id'] = doc.id;
         return EventModel.fromMap(data);
@@ -58,7 +58,7 @@ class EventController extends GetxController {
       events.assignAll(eventList);
       log('Events loaded: ${events.length}');
     } catch (e) {
-      log('Error fetching events: $e');
+      // log('Error fetching events: $e');
     }
   }
 
@@ -70,9 +70,9 @@ class EventController extends GetxController {
         for (var doc in snapshot.docs) doc.id: doc['name'] as String
       };
       categoryMap.assignAll(map);
-      log('Categories loaded: ${categoryMap.length}');
+      // log('Categories loaded: ${categoryMap.length}');
     } catch (e) {
-      log('Error fetching categories: $e');
+      // log('Error fetching categories: $e');
     }
   }
 
@@ -86,7 +86,7 @@ class EventController extends GetxController {
     } else {
       favoriteEvents.add(event.id);
     }
-    log('Favorite toggled: ${event.id}, Favorites: ${favoriteEvents.length}');
+    // log('Favorite toggled: ${event.id}, Favorites: ${favoriteEvents.length}');
 
     // Manual debouncing for saving favorites
     _debounceTimer?.cancel();
@@ -106,9 +106,9 @@ class EventController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       final favorites = prefs.getStringList('favoriteEvents') ?? [];
       favoriteEvents.assignAll(favorites);
-      log('Favorites loaded: ${favoriteEvents.length}');
+      // log('Favorites loaded: ${favoriteEvents.length}');
     } catch (e) {
-      log('Error loading favorites: $e');
+      // log('Error loading favorites: $e');
     }
   }
 
@@ -116,9 +116,9 @@ class EventController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList('favoriteEvents', favoriteEvents.toList());
-      log('Favorites saved: ${favoriteEvents.length}');
+      // log('Favorites saved: ${favoriteEvents.length}');
     } catch (e) {
-      log('Error saving favorites: $e');
+      // log('Error saving favorites: $e');
     }
   }
 
@@ -134,7 +134,7 @@ class EventController extends GetxController {
           eventDate.isAfter(oneWeekAgo);
     }).toList();
   }
-  // Helper to parse event.date safely
+  //  to parse event.date safely
   DateTime? _parseEventDate(dynamic date) {
     if (date == null) return null;
     if (date is DateTime) return date;
@@ -148,7 +148,7 @@ class EventController extends GetxController {
     return null;
   }
 
-  // NEW: Upcoming events filtered by user interest
+  //  Upcoming events filtered by user interest
  List<EventModel> get upcomingEventsByUserInterest {
   final now = DateTime.now();
   // Convert user-selected category NAMES to their IDs

@@ -40,7 +40,7 @@ class CategorySelectController extends GetxController {
     }
   }
 
-  // In your CategorySelectController (or wherever you handle saving)
+  
 Future<void> saveCategoriesAndProceed() async {
   final uid = FirebaseAuth.instance.currentUser?.uid;
   if (uid == null) return;

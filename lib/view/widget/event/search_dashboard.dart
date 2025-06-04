@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/search_controller.dart';
-import 'package:zesta_1/view/widget/event/event_details.dart';
+import 'package:zesta_1/view/screen/event_details.dart';
 
 class EventSearchPage extends StatelessWidget {
   final EventSearchController controller = Get.find<EventSearchController>();
@@ -87,7 +87,7 @@ class EventCard extends StatelessWidget {
        borderRadius: BorderRadius.circular(12),
       onTap: () {
         // Navigate to the details page, passing the event
-        Get.to(() => EventDetailsPage(event: event, eventId: '',));
+        Get.to(() => EventDetailsPage(event: event,));
       },
       child: Card(
         elevation: 2,
