@@ -1,18 +1,16 @@
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/view/widget/event/back_button.dart';
 import 'package:zesta_1/view/widget/event/book_button.dart';
 import 'package:zesta_1/view/widget/event/details_event.dart';
 import 'package:zesta_1/view/widget/event/event_age_widget.dart';
 import 'package:zesta_1/view/widget/event/event_infor.dart';
+import 'package:zesta_1/view/widget/event/expand_event.dart';
 import 'package:zesta_1/view/widget/event/favorite_icon.dart';
 import 'package:zesta_1/view/widget/event/image_slider.dart';
 import 'package:zesta_1/view/widget/event/organizer_location.dart';
-import 'package:zesta_1/view/widget/event/recommented_item.dart';
 
-import 'package:zesta_1/services/event_controller.dart';
 import 'package:zesta_1/constant/color.dart';
 
 class EventDetailsPage extends StatelessWidget {
@@ -22,7 +20,7 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<EventController>();
+    // final controller = Get.find<EventController>();
     final screenHeight = MediaQuery.of(context).size.height;
     final imageHeight = screenHeight * 0.35;
 
@@ -89,12 +87,11 @@ class EventDetailsPage extends StatelessWidget {
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          event.description ?? 'No Description',
-                          style: const TextStyle(fontSize: 14, height: 1.5),
-                        ),
+                       const SizedBox(height: 12),
+                       ExpandableDescription(description: event.description ?? 'No Description'),
+
                         const SizedBox(height: 30),
-                        RecommendedItemsWidget(events: controller.allEvents),
+                        // RecommendedItemsWidget(events: controller.allEvents),
                       ],
                     ),
                   ),

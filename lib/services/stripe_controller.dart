@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -26,7 +25,7 @@ class PaymentController extends GetxController {
         options: Options(
           contentType: Headers.formUrlEncodedContentType,
           headers: {
-            "Authorization": "Bearer ${AppKeys.stripeSecretKey}", 
+            "Authorization": "Bearer ${AppKeys.stripeSecretKey}",
           },
         ),
       );
@@ -72,8 +71,8 @@ class PaymentController extends GetxController {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Payment Successful!',
-      '₹${amount.toStringAsFixed(2)} payment completed successfully',
+      'Ticket Confirmed!',
+      'Your ticket has been booked successfully. Payment of ₹${amount.toStringAsFixed(2)} received. Enjoy the event!',
       notificationDetails,
     );
   }

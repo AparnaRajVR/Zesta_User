@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // <-- Add this import
+import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/model/event_model.dart';
 import 'package:zesta_1/services/event_controller.dart';
 
@@ -47,7 +48,7 @@ class PastEventsHorizontalList extends StatelessWidget {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   child: Container(
-                    width: 220,
+                    width: 210,
                     padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +68,7 @@ class PastEventsHorizontalList extends StatelessWidget {
                                   ),
                                 )
                               : Container(
-                                  color: Colors.grey[300],
+                                  color: AppColors.textlight,
                                   child: const Center(
                                     child: Icon(Icons.image, size: 40, color: Colors.grey),
                                   ),

@@ -71,7 +71,7 @@ class Dashboard extends StatelessWidget {
                         RecommendedItemsWidget(
                             events:
                                 eventController.upcomingEventsByUserInterest),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 21),
                         PastEventsHorizontalList(
                             events: eventController.allEvents),
                       ],

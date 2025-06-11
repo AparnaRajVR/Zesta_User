@@ -85,6 +85,13 @@ class FavoritesPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                       IconButton(
+                icon: Icon(Icons.favorite, color: Colors.red),
+                tooltip: 'Remove from favorites',
+                onPressed: () {
+                  controller.removeFromFavorites(event); // <-- Added this line
+                },
+              ),
                       const Icon(Icons.arrow_forward_ios, size: 16),
                     ],
                   ),

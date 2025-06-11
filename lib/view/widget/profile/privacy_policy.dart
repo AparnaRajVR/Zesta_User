@@ -16,7 +16,7 @@ class PrivacyPolicyState extends State<PrivacyPolicy> {
     return Scaffold(
       appBar: AppBar(
      
-        title: Text('Privacy & Policy')),
+        ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: WebUri("https://www.freeprivacypolicy.com/live/c4378192-639c-42c3-a780-67b0f665d67c "),

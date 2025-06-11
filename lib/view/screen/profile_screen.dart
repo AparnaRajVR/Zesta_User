@@ -48,31 +48,34 @@ class ProfileScreen extends StatelessWidget {
           foregroundColor: Colors.black87,
           title: const Text(
             "Profile",
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: FontWeight.w600,),
+            
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.edit, color: Colors.blue.shade600),
-              onPressed: () async {
-                final updated =
-                    await Get.to(() => EditProfileScreen(data: data));
-                if (updated == true) fetchProfile();
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.logout, color: Colors.red.shade600),
-              onPressed: () async {
-                await FirebaseControl().signOut();
-              },
-            ),
-          ],
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.edit, color: Colors.blue.shade600),
+          //     onPressed: () async {
+          //       final updated =
+          //           await Get.to(() => EditProfileScreen(data: data));
+          //       if (updated == true) fetchProfile();
+          //     },
+          //   ),
+          //   IconButton(
+          //     icon: Icon(Icons.logout, color: Colors.red.shade600),
+          //     onPressed: () async {
+          //       await FirebaseControl().signOut();
+          //     },
+          //   ),
+          // ],
         ),
         body: ListView(
           padding: const EdgeInsets.all(24),
           children: [
             ProfileHeader(data: data, user: user),
             const SizedBox(height: 32),
-            const ProfileSettings(),
+             ProfileSettings(onEditProfile: () { 
+              Get.to(EditProfileScreen(data: data,));
+             },),
             const SizedBox(height: 32),
             Center(
               child: Text(

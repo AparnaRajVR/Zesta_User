@@ -15,10 +15,17 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.primary,
-      elevation: 0,
-      title: Column(
+    return AppBar(backgroundColor: AppColors.primary,
+  elevation: 0,
+  leading: Padding(
+    padding: const EdgeInsets.only(left: 5.0),
+    child: Image.asset(
+      'assets/images/logo.png', 
+      height: 100,
+      width: 100,
+    ),
+  ),
+  title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(

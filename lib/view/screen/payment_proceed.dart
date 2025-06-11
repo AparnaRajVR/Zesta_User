@@ -96,14 +96,14 @@ class BookingPage extends StatelessWidget {
             ),
             child: Text(
               'PROCEED TO PAYMENT',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: AppColors.textlight),
             ),
           ),
           SizedBox(height: 16),
-          Text(
+         Text(
             "Note:\n- No refund will be provided after cancellation.\n- Each user can purchase a maximum of 10 tickets. Ticket quantity cannot be increased beyond 10 per user.",
             style: TextStyle(
-              color: Colors.grey,
+              color: AppColors.textaddn,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

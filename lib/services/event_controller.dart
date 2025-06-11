@@ -111,6 +111,13 @@ class EventController extends GetxController {
       // log('Error loading favorites: $e');
     }
   }
+  void removeFromFavorites(EventModel event) { 
+    favoriteEvents.remove(event.id);           
+    _debounceTimer?.cancel();                  
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () async { 
+      await _saveFavorites();                  
+    });                                        
+  }                   
 
   Future<void> _saveFavorites() async {
     try {

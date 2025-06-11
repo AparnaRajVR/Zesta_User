@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:zesta_1/constant/color.dart';
+import 'package:zesta_1/constant/media_query.dart';
 
 class BottomNavWidget extends StatelessWidget {
   final RxInt selectedIndex;
@@ -15,9 +16,11 @@ class BottomNavWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQueryHelper(context);
     return Container(
       color: AppColors.textlight,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: EdgeInsets.symmetric(
+          horizontal: mediaQuery.screenWidth * 0.01, vertical: 10),
       child: Obx(() => GNav(
             backgroundColor: AppColors.textlight,
             rippleColor: AppColors.primary.withOpacity(0.2),
@@ -31,6 +34,7 @@ class BottomNavWidget extends StatelessWidget {
             color: AppColors.textaddn,
             tabs: const [
               GButton(icon: Icons.home, text: 'Home'),
+              
               GButton(icon: Icons.event, text: 'Tickets'),
               GButton(icon: Icons.favorite, text: 'Favourites'),
               GButton(icon: Icons.person, text: 'Profile'),

@@ -26,7 +26,7 @@ class OnboardingScreen extends StatelessWidget {
           Obx(() {
             return currentPage.value < 2
                 ? Padding(
-                    padding: const EdgeInsets.only(top: 20.0, right: 20.0),
+                    padding: const EdgeInsets.only(top: 35.0, right: 20.0),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: TextButton(

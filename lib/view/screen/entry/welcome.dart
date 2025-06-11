@@ -29,21 +29,22 @@ class WelcomeScreen extends GetWidget<FirebaseControl> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top: 90.0),
               child: Image.asset(
                 'assets/images/logo.png',
-                height: 170,
-                width: 170,
+                height: 290,
+                width: 290,
               ),
             ),
             const SizedBox(
-              height: 60,
+              height: 5,
             ),
             const Text(
-              'Welcome Back',
+              'Welcome Back !',
               style: TextStyle(
-                fontSize: 33,
+                fontSize: 28,
                 color: AppColors.textlight, 
+                fontWeight: FontWeight.w800,
               ),
             ),
             const SizedBox(height: 38),
