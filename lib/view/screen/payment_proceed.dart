@@ -44,9 +44,12 @@ class BookingPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text('Book Tickets'),
-        backgroundColor: AppColors.second,
+        title: Text('Book Tickets',
+          style: TextStyle(color: AppColors.textlight, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textlight,
+        centerTitle: true,
       ),
       body: ListView(
         padding: EdgeInsets.all(16),

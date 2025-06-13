@@ -15,7 +15,12 @@ class TicketScreen extends StatelessWidget {
     final TicketController ticketController = Get.put(TicketController());
 
     return Scaffold(
-      appBar: AppBar(title: Text('Your Tickets')),
+      appBar: AppBar(title: Text('Your Tickets', style: TextStyle(color: AppColors.textlight, fontSize: 20, fontWeight: FontWeight.bold)), 
+        backgroundColor: AppColors.primary, 
+        elevation: 0, 
+        iconTheme: IconThemeData(color: AppColors.textlight), 
+        titleTextStyle: TextStyle(color: AppColors.textlight, fontSize: 20, fontWeight: FontWeight.bold),
+      centerTitle: true,),
       body: FutureBuilder(
           future: ticketController.fetchAllTickets(),
           builder: (context, snapshot) {

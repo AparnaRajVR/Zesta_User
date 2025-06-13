@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zesta_1/constant/color.dart';
 import 'package:zesta_1/services/firebase_control.dart';
 import 'package:zesta_1/services/profile_controller.dart';
 import 'package:zesta_1/view/widget/profile/edit_profile.dart';
@@ -44,13 +45,15 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.primary,
           foregroundColor: Colors.black87,
           title: const Text(
             "Profile",
-            style: TextStyle(fontWeight: FontWeight.w600,),
-            
+            style: TextStyle(fontWeight: FontWeight.w600,color: AppColors.textlight),
+           
           ),
+          centerTitle: true,
+          
           // actions: [
           //   IconButton(
           //     icon: Icon(Icons.edit, color: Colors.blue.shade600),

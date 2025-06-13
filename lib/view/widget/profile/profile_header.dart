@@ -196,12 +196,12 @@ class ProfileHeader extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.email_outlined,
-                        size: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(width: 8),
+                      // Icon(
+                      //   Icons.email_outlined,
+                      //   size: 16,
+                      //   color: Colors.grey.shade600,
+                      // ),
+                      // const SizedBox(width: 8),
                       Flexible(
                         child: Text(
                           data['email'] ?? user?.email ?? 'No email',

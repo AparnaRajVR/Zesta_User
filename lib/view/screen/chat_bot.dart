@@ -35,9 +35,10 @@ class _BotpressChatbotPageState extends State<BotpressChatbotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chatbot', style: TextStyle(color: AppColors.textlight),), // Use your app's text color
+        title: const Text('Chatbot', style: TextStyle(color: AppColors.textlight,fontWeight:FontWeight.bold),), // Use your app's text color
         backgroundColor: AppColors.primary, // Use your app's primary color
-        // foregroundColor: AppColors.second, // Use your app's text color
+        foregroundColor: AppColors.textlight, // Use your app's text color
+        centerTitle: true,
       ),
       body: Stack(
         children: [

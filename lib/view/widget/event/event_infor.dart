@@ -1,4 +1,6 @@
+
 // import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart'; 
 // import 'package:zesta_1/model/event_model.dart';
 
 // class EventInfoBar extends StatelessWidget {
@@ -9,15 +11,39 @@
 //     if (dateStr == null) return 'No Date';
 //     try {
 //       final date = DateTime.parse(dateStr);
-//       return '${date.day}/${date.month}/${date.year}';
+//       // Format: Wednesday, 11 June 2025
+//       return DateFormat('EEEE, d MMMM y').format(date);
 //     } catch (_) {
-//       return dateStr ;
+//       return dateStr;
 //     }
 //   }
 
-//   String _formatTimeRange(String? startTime, String? endTime) {
-//     return '${startTime ?? 'N/A'} - ${endTime ?? 'N/A'}';
+ 
+// String _formatTime(String? dateStr, String? startTime) {
+//   if (dateStr == null || startTime == null) return 'N/A';
+
+//   // Extract date part (handles both ISO 8601 and "yyyy-MM-dd")
+//   String datePart = dateStr.contains('T') ? dateStr.split('T')[0] : dateStr;
+
+//   DateTime? startDateTime;
+//   List<String> timeFormats = ['HH:mm', 'h:mm a'];
+
+//   for (var format in timeFormats) {
+//     try {
+//       startDateTime = DateFormat('yyyy-MM-dd $format').parse('$datePart $startTime');
+//       break;
+//     } catch (_) {
+//       continue;
+//     }
 //   }
+
+//   if (startDateTime != null) {
+//     return DateFormat('h:mm a').format(startDateTime);
+//   } else {
+//     return startTime;
+//   }
+// }
+
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -29,7 +55,7 @@
 //         mainAxisAlignment: MainAxisAlignment.spaceAround,
 //         children: [
 //           _infoItem(Icons.calendar_today_outlined, 'Date', _formatDate(event.date)),
-//           _infoItem(Icons.access_time_outlined, 'Time', _formatTimeRange(event.startTime, event.endTime)),
+//           _infoItem(Icons.access_time_outlined, 'Time', _formatTimeRange( event.startTime)),
 //           _infoItem(Icons.timer_outlined, 'Duration', event.duration ?? 'N/A'),
 //         ],
 //       ),
@@ -48,9 +74,8 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // <-- Add this import
+import 'package:intl/intl.dart'; 
 import 'package:zesta_1/model/event_model.dart';
 
 class EventInfoBar extends StatelessWidget {
@@ -68,18 +93,28 @@ class EventInfoBar extends StatelessWidget {
     }
   }
 
-  String _formatTimeRange(String? dateStr, String? startTime, String? endTime) {
-    if (dateStr == null || startTime == null || endTime == null) return 'N/A';
-    try {
-      final date = DateTime.parse(dateStr);
-      // Combine date and time strings to DateTime objects
-      final start = DateFormat("yyyy-MM-dd HH:mm").parse('${dateStr.split('T')[0]} $startTime');
-      final end = DateFormat("yyyy-MM-dd HH:mm").parse('${dateStr.split('T')[0]} $endTime');
-      final startFormatted = DateFormat('h:mm a').format(start);
-      final endFormatted = DateFormat('h:mm a').format(end);
-      return '$startFormatted - $endFormatted';
-    } catch (_) {
-      return '${startTime ?? 'N/A'} - ${endTime ?? 'N/A'}';
+  String _formatTime(String? dateStr, String? startTime) {
+    if (dateStr == null || startTime == null) return 'N/A';
+
+    // Extract date part (handles both ISO 8601 and "yyyy-MM-dd")
+    String datePart = dateStr.contains('T') ? dateStr.split('T')[0] : dateStr;
+
+    DateTime? startDateTime;
+    List<String> timeFormats = ['HH:mm', 'h:mm a'];
+
+    for (var format in timeFormats) {
+      try {
+        startDateTime = DateFormat('yyyy-MM-dd $format').parse('$datePart $startTime');
+        break;
+      } catch (_) {
+        continue;
+      }
+    }
+
+    if (startDateTime != null) {
+      return DateFormat('h:mm a').format(startDateTime);
+    } else {
+      return startTime;
     }
   }
 
@@ -88,12 +123,14 @@ class EventInfoBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: Colors.grey.shade50, borderRadius: BorderRadius.circular(12)),
+        color: Colors.grey.shade50, 
+        borderRadius: BorderRadius.circular(12)
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _infoItem(Icons.calendar_today_outlined, 'Date', _formatDate(event.date)),
-          _infoItem(Icons.access_time_outlined, 'Time', _formatTimeRange(event.date, event.startTime, event.endTime)),
+          _infoItem(Icons.access_time_outlined, 'Time', _formatTime(event.date, event.startTime)),
           _infoItem(Icons.timer_outlined, 'Duration', event.duration ?? 'N/A'),
         ],
       ),
